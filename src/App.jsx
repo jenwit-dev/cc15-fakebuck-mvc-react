@@ -1,11 +1,15 @@
+import Router from "./router/Router";
+
 function App() {
-  return (
-    <>
-      <div className="text-2xl text-bold text-cyan-500 bg-black">
-        test tailwindcss
-      </div>
-    </>
-  );
+  return <Router />;
 }
 
 export default App;
+
+{
+  /* <>
+<div className="text-2xl text-bold text-cyan-500 bg-black">
+  test tailwindcss
+</div>
+</> */
+}
