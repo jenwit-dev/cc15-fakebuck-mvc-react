@@ -5,9 +5,10 @@ import { addAccessToken, getAccessToken } from "../utils/local-storage";
 const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
-  // authUser === null means user not logged in
-  // authUser: { id, name, email, ... } user is already logged in
+  // authUser === null means user not logged in yet
+  // authUser: { id : Number, firstName : String, lastName : String, ... } means user is already logged in now
   const [authUser, setAuthUser] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // useEffect option 1 (with async/await)
   // useEffect to fetch authenticated user info when the component mounts
@@ -36,17 +37,19 @@ export default function AuthContextProvider({ children }) {
 
   // useEffect option 2 (with .then/.catch)
   useEffect(() => {
+    // verify token in local storage and fetch user info
     if (getAccessToken()) {
-      axios.get("/auth/me").then((res) => {
-        setAuthUser(res.data.user);
-      });
-      // .finally(() => {
-      //   setInitialLoading(false);
-      // });
+      axios
+        .get("/auth/me")
+        .then((res) => {
+          setAuthUser(res.data.user);
+        })
+        .finally(() => {
+          setInitialLoading(false);
+        });
+    } else {
+      setInitialLoading(false);
     }
-    // else {
-    //   setInitialLoading(false);
-    // }
   }, []);
 
   // credential = { username, password }
@@ -61,8 +64,23 @@ export default function AuthContextProvider({ children }) {
     }
   };
 
+  const register = async (registerInputObject) => {
+    const res = await axios.post("/auth/register", registerInputObject);
+    addAccessToken(res.data.accessToken);
+    setAuthUser(res.data.user);
+  };
+
   return (
-    <AuthContext.Provider value={{ login, authUser, setAuthUser }}>
+    <AuthContext.Provider
+      value={{
+        login,
+        authUser,
+        setAuthUser,
+        initialLoading,
+        setInitialLoading,
+        register,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
