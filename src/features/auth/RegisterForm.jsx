@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import RegisterInput from "./RegisterInput";
 import Joi from "joi";
 import InputErrorMessage from "./InputErrorMessage";
@@ -9,6 +9,7 @@ const registerSchema = Joi.object({
   firstName: Joi.string().trim().required(),
   lastName: Joi.string().trim().required(),
   emailOrMobile: Joi.alternatives([
+    // tlds: false means to allow any top-level domain options ex. .com, .net, .org
     Joi.string().email({ tlds: false }),
     Joi.string().pattern(/^[0-9]{10}$/),
   ]).required(),
@@ -50,16 +51,21 @@ export default function RegisterForm() {
   };
 
   const handleSubmitForm = (e) => {
+    // console.log(e);
     e.preventDefault();
     const validationError = validateRegister(input);
     if (validationError) {
       return setError(validationError);
     }
     setError({});
-    register(input);
-    // .catch((err) => {
-    //   toast.error(err.response?.data.message);
-    // });
+    register(input).catch((err) => {
+      // alert("error");
+      // toast.error("test error");
+      // ?. optional chaining to check if err.response is undefined or null in order to avoid error
+      // if undefined or null, stop and return undefined directly without accessing .data.message
+      // if exists, continue to access .data.message
+      toast.error(err.response?.data.message);
+    });
   };
 
   return (

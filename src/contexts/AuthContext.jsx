@@ -1,6 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "../config/axios";
-import { addAccessToken, getAccessToken } from "../utils/local-storage";
+import {
+  addAccessToken,
+  getAccessToken,
+  removeAccessToken,
+} from "../utils/local-storage";
 
 const AuthContext = createContext();
 
@@ -22,6 +26,7 @@ export default function AuthContextProvider({ children }) {
   //   // the Authorization header is automatically added
   //   // Do not make effect fn async directly, so define an inner async fn (wrapper async fn inside effect fn of useEffect)
 
+  // useEffect(() => {
   //   const fetchAuthUser = async () => {
   //     try {
   //       if (getAccessToken()) {
@@ -55,19 +60,20 @@ export default function AuthContextProvider({ children }) {
   // credential = { username, password }
   const login = async (credential) => {
     // console.log(credential);
-    try {
-      const { data } = await axios.post("/auth/login", credential);
-      addAccessToken(data.accessToken);
-      setAuthUser(data.user);
-    } catch (err) {
-      console.log(err);
-    }
+    const { data } = await axios.post("/auth/login", credential);
+    addAccessToken(data.accessToken);
+    setAuthUser(data.user);
   };
 
   const register = async (registerInputObject) => {
     const res = await axios.post("/auth/register", registerInputObject);
     addAccessToken(res.data.accessToken);
     setAuthUser(res.data.user);
+  };
+
+  const logout = () => {
+    removeAccessToken();
+    setAuthUser(null);
   };
 
   return (
@@ -79,6 +85,7 @@ export default function AuthContextProvider({ children }) {
         initialLoading,
         setInitialLoading,
         register,
+        logout,
       }}
     >
       {children}

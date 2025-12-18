@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import { useAuth } from "./hooks/use-auth";
 import Router from "./router/Router";
 import Loading from "./components/Loading";
@@ -8,7 +9,16 @@ function App() {
   if (initialLoading) {
     return <Loading />;
   }
-  return <Router />;
+  return (
+    <>
+      <Router />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        theme="colored"
+      />
+    </>
+  );
 }
 
 export default App;
