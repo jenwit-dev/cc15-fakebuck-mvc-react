@@ -9,7 +9,7 @@ export default function Modal({
     <>
       {open && (
         <>
-          {/* backdrop  */}
+          {/* backdrop / overlay  */}
           <div className="fixed inset-0 bg-white opacity-70 z-20"></div>
           {/* container of modal */}
           <div className="fixed inset-0 z-30">
