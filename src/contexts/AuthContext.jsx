@@ -76,6 +76,11 @@ export default function AuthContextProvider({ children }) {
     setAuthUser(null);
   };
 
+  const updateProfile = async (formData) => {
+    const res = await axios.patch("/user", formData);
+    setAuthUser({ ...authUser, ...res.data });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -86,6 +91,7 @@ export default function AuthContextProvider({ children }) {
         setInitialLoading,
         register,
         logout,
+        updateProfile,
       }}
     >
       {children}
