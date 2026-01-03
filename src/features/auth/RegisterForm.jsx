@@ -61,8 +61,8 @@ export default function RegisterForm() {
     register(input).catch((err) => {
       // alert("error");
       // toast.error("test error");
-      // ?. optional chaining to check if err.response is undefined or null in order to avoid error
-      // if undefined or null, stop and return undefined directly without accessing .data.message
+      // ?. optional chaining to check if err.response is null or undefined in order to avoid error
+      // if null or undefined, stop and return undefined directly without accessing .data.message
       // if exists, continue to access .data.message
       toast.error(err.response?.data.message);
     });

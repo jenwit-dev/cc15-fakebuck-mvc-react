@@ -23,10 +23,8 @@ function App() {
 
 export default App;
 
-{
-  /* <>
+/* <>
 <div className="text-2xl text-bold text-cyan-500 bg-black">
   test tailwindcss
 </div>
 </> */
-}

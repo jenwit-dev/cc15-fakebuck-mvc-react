@@ -4,7 +4,8 @@ import ProfileInfo from "../features/profile/ProfileInfo";
 // import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import axios from "../config/axios";
-import Loading from "../components/Loading";
+// import Loading from "../components/Loading";
+import { useAuth } from "../hooks/use-auth";
 
 export default function ProfilePage() {
   // const location = useLocation();
@@ -14,17 +15,30 @@ export default function ProfilePage() {
   // console.log(params); // { profileId: '3' } , profileId comes from createBrowserRouter
 
   const [profileUser, setProfileUser] = useState({});
+  const [statusWithAuthUser, setStatusWithAuthUser] = useState("");
   const { profileId } = useParams();
-  const [loading, setLoading] = useState(true);
+
+  const { authUser } = useAuth();
+  const isAuthUser = authUser.id === +profileId;
+  // const [loading, setLoading] = useState(true);
   // const [text, setText] = useState("");
 
   // console.log(`profileId : ${profileId}`);
   // console.log(typeof profileId); // profileId from useParams is always a string
 
   useEffect(() => {
-    console.log("Effect ran for profileId", profileId);
+    // console.log("Effect ran for profileId", profileId);
+    // if (authUser.id === +profileId) {
+    //   setProfileUser(authUser);
+    // } else {
     axios
-      .get(`/user/${profileId}`)
+      .get(`/user/${profileId}`, {
+        headers: {
+          "Cache-Control": "no-cache", // Prevent caching
+          Pragma: "no-cache", // HTTP/1.0 compatibility
+          "If-Modified-Since": "0", // Force fresh data
+        },
+      })
       .then((res) => {
         // batching 3 state updates into a single render
         // setProfileUser(res.data.user);
@@ -32,23 +46,33 @@ export default function ProfilePage() {
         // setText("Hello");
 
         setProfileUser(res.data.user);
+        setStatusWithAuthUser(res.data.status);
       })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+      .catch((err) => console.log(err));
+    // .finally(() => setLoading(false));
+    // }
   }, [profileId]);
 
   // Dependency array can be states, props, or string params that when they change, the effect will re-run
 
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
   return (
     <div className="bg-gradient-to-b from-gray-200 to-white shadow pb-4">
       {profileUser ? (
         <>
-          <ProfileCover coverImage={profileUser?.coverImage} />
-          <ProfileInfo profileUser={profileUser} />
+          <ProfileCover
+            coverImage={
+              isAuthUser ? authUser.coverImage : profileUser?.coverImage
+            }
+          />
+          <ProfileInfo
+            profileUser={isAuthUser ? authUser : profileUser}
+            statusWithAuthUser={statusWithAuthUser}
+            setStatusWithAuthUser={setStatusWithAuthUser}
+          />
         </>
       ) : (
         <h1 className="text-center p-8 text-3xl font-bold">
