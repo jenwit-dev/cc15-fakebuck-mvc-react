@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [profileUser, setProfileUser] = useState({});
   const [statusWithAuthUser, setStatusWithAuthUser] = useState("");
   const { profileId } = useParams();
+  const [profileFriends, setProfileFriends] = useState([]);
 
   const { authUser } = useAuth();
   const isAuthUser = authUser.id === +profileId;
@@ -47,11 +48,12 @@ export default function ProfilePage() {
 
         setProfileUser(res.data.user);
         setStatusWithAuthUser(res.data.status);
+        setProfileFriends(res.data.friends);
       })
       .catch((err) => console.log(err));
     // .finally(() => setLoading(false));
     // }
-  }, [profileId]);
+  }, [profileId, statusWithAuthUser]);
 
   // Dependency array can be states, props, or string params that when they change, the effect will re-run
 
@@ -72,6 +74,7 @@ export default function ProfilePage() {
             profileUser={isAuthUser ? authUser : profileUser}
             statusWithAuthUser={statusWithAuthUser}
             setStatusWithAuthUser={setStatusWithAuthUser}
+            profileFriends={profileFriends}
           />
         </>
       ) : (
