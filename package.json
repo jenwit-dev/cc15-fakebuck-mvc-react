@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^1.13.2",
+    "javascript-time-ago": "^2.5.12",
     "joi": "^18.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

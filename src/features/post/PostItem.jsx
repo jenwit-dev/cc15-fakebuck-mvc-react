@@ -11,7 +11,7 @@ export default function PostItem({ postObj }) {
     <div className="bg-white px-4 pt-3 border shadow rounded-lg">
       <PostHeader postObj={postObj} />
       <PostContent message={postObj.message} image={postObj.image} />
-      <PostFooter />
+      <PostFooter postObj={postObj} />
     </div>
   );
 }

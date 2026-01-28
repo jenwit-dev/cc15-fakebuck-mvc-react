@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Avatar from "../../components/Avatar";
 import { EllipsisIcon } from "../../icons";
+import formatTimeAgo from "../../utils/time-ago";
 // import { useEffect, useState } from "react";
 // import axios from "../../config/axios";
 
@@ -34,7 +35,9 @@ export default function PostHeader({ postObj }) {
           {/* {user.firstName} {user.lastName} */}
           {postObj.user.firstName} {postObj.user.lastName}
         </Link>
-        <small className="text-gray-500 text-xs">1m</small>
+        <small className="text-gray-500 text-xs">
+          {formatTimeAgo(postObj.createdAt)}
+        </small>
       </div>
 
       <div className="relative">
