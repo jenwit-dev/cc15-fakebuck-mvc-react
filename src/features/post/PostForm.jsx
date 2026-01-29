@@ -1,10 +1,9 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../../hooks/use-auth";
 import { ImageIcon } from "../../icons";
-import axios from "../../config/axios";
 import Loading from "../../components/Loading";
 
-export default function PostForm({ onSuccess }) {
+export default function PostForm({ onSuccess, onSubmit }) {
   const { authUser } = useAuth();
   const fileEl = useRef(null);
   const [file, setFile] = useState(null);
@@ -22,7 +21,8 @@ export default function PostForm({ onSuccess }) {
         formData.append("message", message);
       }
       setLoading(true);
-      await axios.post("/post", formData);
+      // await axios.post("/post", formData);
+      await onSubmit(formData);
       onSuccess();
     } catch (err) {
       console.log(err);
